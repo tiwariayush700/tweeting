@@ -3,6 +3,8 @@ module github.com/tiwariayush700/tweeting
 go 1.13
 
 require (
+	github.com/antihax/optional v1.0.0 // indirect
+	github.com/approveapi/approveapi-go v0.0.0-20190512221232-21e080223fe3
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3

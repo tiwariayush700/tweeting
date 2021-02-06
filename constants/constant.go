@@ -6,3 +6,8 @@ const FileUsage = "File to read all configuration"
 
 const ContextKeyUserId = "userID"
 const ContextKeyRole = "role"
+
+const (
+	Authorize = "Authorize"
+	Reject = "Reject"
+)

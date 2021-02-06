@@ -42,7 +42,7 @@ Authorization: {{token}}
 
 
 ##################ADMIN APIS UPDATE ROLE#################
-PUT {{host}}/user/role/14
+PUT {{host}}/admin/user/role/14
 Content-Type: application/json
 Authorization: {{token}}
 

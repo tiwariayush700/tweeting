@@ -29,10 +29,15 @@ func (u *userController) RegisterRoutes() {
 
 		routerGroupVerified := userRouterGroup.Use(VerifyUserAndServe(u.authService))
 		routerGroupVerified.GET("/me", u.GetUserProfile())
-
-		routerGroupVerified.Use(VerifyAdminAndServe(u.authService))
-		routerGroupVerified.GET("/fetch/:user_id")
-		routerGroupVerified.PUT("/role/:user_id", u.UpdateUserRole())
+	}
+	adminRouterGroup := router.Group("/admin")
+	{
+		adminRouterGroup.Use(VerifyUserAndServe(u.authService))
+		adminRouterGroup.Use(VerifyAdminAndServe(u.authService))
+		adminUserRouterGroup := adminRouterGroup.Group("/user")
+		{
+			adminUserRouterGroup.PUT("/role/:user_id", u.UpdateUserRole())
+		}
 	}
 }
 
