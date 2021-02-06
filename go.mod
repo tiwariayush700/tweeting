@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/antihax/optional v1.0.0 // indirect
-	github.com/approveapi/approveapi-go v0.0.0-20190512221232-21e080223fe3
+	github.com/approveapi/approveapi-go v0.0.0-20190512221232-21e080223fe3 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
@@ -20,6 +20,7 @@ require (
 	golang.org/x/sys v0.0.0-20210124154548-22da62e12c0c // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gorm.io/datatypes v1.0.0
 	gorm.io/driver/postgres v1.0.7
 	gorm.io/gorm v1.20.12
 )

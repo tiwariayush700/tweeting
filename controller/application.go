@@ -64,5 +64,9 @@ func (app *app) Migrate() error {
 		return err
 	}
 
+	if err := app.DB.AutoMigrate(&models.Action{}); err != nil {
+		return err
+	}
+
 	return nil
 }
