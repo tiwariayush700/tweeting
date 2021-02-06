@@ -1,0 +1,9 @@
+{
+  "postgres_user": "dbUser",
+  "postgres_password": "complexPassword",
+  "postgres_server": "localhost",
+  "postgres_port": "5431",
+  "db_name": "user_management",
+  "auth_secret": "eFCRM0Dj7xPEqUM7FbOzFPSci6up8245",
+  "port": "8080"
+}

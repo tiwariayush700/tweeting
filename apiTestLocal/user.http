@@ -1,0 +1,51 @@
+######REGISTER ADMIN USER#########
+POST {{host}}/user/register
+Content-Type: application/json
+
+{
+  "firstName": "Ayush",
+  "lastName": "Tiwari",
+  "phone": "0987654321",
+  "role": "ADMIN",
+  "email": "tiwariayushs00@gmail.com",
+  "password": "Password@123"
+}
+
+######REGISTER USER#########
+POST {{host}}/user/register
+Content-Type: application/json
+
+{
+  "firstName": "Ayush",
+  "lastName": "Tiwari",
+  "phone": "0987654321",
+  "role": "USER",
+  "email": "tiwariayush00@gmail.com",
+  "password": "Password@123"
+}
+
+
+###############LOGIN USER
+POST {{host}}/user/login
+Content-Type: application/json
+
+{
+  "email": "tiwariayushs00@gmail.com",
+  "password": "Password@123"
+}
+
+
+################ME GET USER PROFILE###################
+GET {{host}}/user/me
+Content-Type: application/json
+Authorization: {{token}}
+
+
+##################ADMIN APIS UPDATE ROLE#################
+PUT {{host}}/user/role/14
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "role": "ADMIN"
+}

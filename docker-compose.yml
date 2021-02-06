@@ -1,0 +1,12 @@
+version: '3'
+services:
+  database:
+    image: postgres
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_USER: dbUser
+      POSTGRES_PASSWORD: complexPassword
+      POSTGRES_DB: user_management
+    volumes:
+      - ./.postgresql-data:/var/lib/postgresql/data/ # persist data even if container shuts down
