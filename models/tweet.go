@@ -10,3 +10,7 @@ type Tweet struct {
 	//foreign keys
 	User *User `json:"-"`
 }
+
+type TweetRequest struct {
+	Message string `json:"message"`
+}

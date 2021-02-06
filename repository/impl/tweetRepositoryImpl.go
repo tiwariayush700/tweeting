@@ -12,6 +12,20 @@ type tweetRepositoryImpl struct {
 	repositoryImpl
 }
 
+func (t *tweetRepositoryImpl) GetTweetsByUserID(ctx context.Context, userID uint) ([]models.Tweet, error) {
+	tweets := make([]models.Tweet, 0)
+
+	err := t.DB.Where("user_id = ?", userID).Find(&tweets).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, userError.ErrorNotFound
+		}
+		return nil, err
+	}
+
+	return tweets, nil
+}
+
 func (t *tweetRepositoryImpl) FetchTweets(ctx context.Context) ([]models.Tweet, error) {
 
 	tweets := make([]models.Tweet, 0)

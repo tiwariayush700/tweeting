@@ -38,24 +38,31 @@ func (app *app) Start() {
 
 	//repositories
 	userRepositoryImpl := repositoryImpl.NewUserRepositoryImpl(app.DB)
-	actionRepostiroyImpl := repositoryImpl.NewActionRepositoryImpl(app.DB)
+	actionRepositoryImpl := repositoryImpl.NewActionRepositoryImpl(app.DB)
+	tweetRepositoryImpl := repositoryImpl.NewTweetRepositoryImpl(app.DB)
 
 	//services
 	userService := serviceImpl.NewUserServiceImpl(userRepositoryImpl)
-	actionService := serviceImpl.NewActionServiceImpl(actionRepostiroyImpl)
+	actionService := serviceImpl.NewActionServiceImpl(actionRepositoryImpl)
+	tweetService := serviceImpl.NewTweetServiceImpl(tweetRepositoryImpl)
 	authService := authImpl.NewAuthService(app.Config.AuthSecret)
-	userApprovalService := serviceImpl.NewUserApprovalServiceImpl(userRepositoryImpl, actionRepostiroyImpl)
+	userApprovalService := serviceImpl.NewUserApprovalServiceImpl(userRepositoryImpl, actionRepositoryImpl)
+	tweetApprovalService := serviceImpl.NewTweetApprovalServiceImpl(tweetRepositoryImpl, actionRepositoryImpl)
+
 	approvalServiceProviders := make(map[string]services.ApprovalService)
 	approvalServiceProviders["user"] = userApprovalService
+	approvalServiceProviders["tweet"] = tweetApprovalService
 	approvalService := serviceImpl.NewApprovalServiceImpl(approvalServiceProviders)
 
 	//controllers
 	userController := NewUserController(userService, actionService, authService, app)
 	actionController := NewActionController(actionService, userService, approvalService, authService, app)
+	tweetController := NewTweetController(tweetService, userService, actionService, authService, app)
 
 	//register routes
 	userController.RegisterRoutes()
 	actionController.RegisterRoutes()
+	tweetController.RegisterRoutes()
 
 	app.Router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

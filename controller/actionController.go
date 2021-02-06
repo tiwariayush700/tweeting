@@ -22,22 +22,22 @@ func NewActionController(service services.ActionService, userService services.Us
 	return &actionController{service: service, userService: userService, approvalServiceProviders: approvalServiceProviders, authService: authService, app: app}
 }
 
-func (a *actionController) RegisterRoutes() {
-	router := a.app.Router
+func (t *actionController) RegisterRoutes() {
+	router := t.app.Router
 	superAdminRouterGroup := router.Group("/super-admin")
 	{
-		superAdminRouterGroup.Use(VerifyUserAndServe(a.authService))
+		superAdminRouterGroup.Use(VerifyUserAndServe(t.authService))
 		superAdminRouterGroup.Use(VerifySuperAdminAndServe())
-		adminUserRouterGroup := superAdminRouterGroup.Group("/actions", a.GetActions())
+		adminUserRouterGroup := superAdminRouterGroup.Group("/actions", t.GetActions())
 		{
 			//list all actions
 			adminUserRouterGroup.GET("")
-			adminUserRouterGroup.PUT("/approve", a.ApproveAction())
+			adminUserRouterGroup.PUT("/approve", t.ApproveAction())
 		}
 	}
 }
 
-func (a *actionController) GetActions() gin.HandlerFunc {
+func (t *actionController) GetActions() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		_, _, err := getUserIdAndRoleFromContext(c)
@@ -46,7 +46,7 @@ func (a *actionController) GetActions() gin.HandlerFunc {
 			return
 		}
 
-		actions, err := a.service.FetchActions(c)
+		actions, err := t.service.FetchActions(c)
 		if err != nil {
 			if err == userError.ErrorNotFound {
 				c.JSON(http.StatusNotFound, userError.NewErrorNotFound(err, "action not found"))
@@ -60,7 +60,7 @@ func (a *actionController) GetActions() gin.HandlerFunc {
 	}
 }
 
-func (a *actionController) ApproveAction() gin.HandlerFunc {
+func (t *actionController) ApproveAction() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		_, _, err := getUserIdAndRoleFromContext(c)
@@ -76,7 +76,7 @@ func (a *actionController) ApproveAction() gin.HandlerFunc {
 			return
 		}
 
-		err = a.approvalServiceProviders.Update(c, params.Provider, params.ActionID, constants.ActionStatusApproved)
+		err = t.approvalServiceProviders.Update(c, params.Provider, params.ActionID, constants.ActionStatusApproved)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, userError.NewErrorInternal(err, "something went wrong"))
 			return

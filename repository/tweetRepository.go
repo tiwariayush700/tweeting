@@ -9,4 +9,5 @@ type TweetRepository interface {
 	Repository
 	FetchTweets(ctx context.Context) ([]models.Tweet, error)
 	UpdateTweetMessage(ctx context.Context, tweetID uint, message string) error
+	GetTweetsByUserID(ctx context.Context, userID uint) ([]models.Tweet, error)
 }

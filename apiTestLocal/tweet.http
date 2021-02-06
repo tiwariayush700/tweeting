@@ -1,0 +1,23 @@
+##############TWEETS API FOR USER#################
+POST {{host}}/tweets
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "message": "England will go down 2-0"
+}
+
+##############GET TWEETS FOR THE LOGGED IN USER###############
+GET {{host}}/tweets
+Content-Type: application/json
+Authorization: {{token}}
+
+
+#############ADMIN APIS FOR TWEETS################
+PUT {{host}}/admin/tweets/1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "message": "England will go down 2-0 to update tweet."
+}
