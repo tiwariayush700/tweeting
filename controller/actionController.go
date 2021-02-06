@@ -28,7 +28,7 @@ func (a *actionController) RegisterRoutes() {
 	{
 		superAdminRouterGroup.Use(VerifyUserAndServe(a.authService))
 		superAdminRouterGroup.Use(VerifySuperAdminAndServe())
-		adminUserRouterGroup := superAdminRouterGroup.Group("/actions")
+		adminUserRouterGroup := superAdminRouterGroup.Group("/actions", a.GetActions())
 		{
 			//list all actions
 			adminUserRouterGroup.GET("")
