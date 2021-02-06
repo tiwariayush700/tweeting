@@ -200,18 +200,6 @@ func (u *userController) UpdateUserRole() gin.HandlerFunc {
 			return
 		}
 
-		//err = u.service.UpdateUserRole(c, uint(userId), params.Role)
-		//if err != nil {
-		//	if err == userError.ErrorNotFound {
-		//		errRes := userError.NewErrorNotFound(err, "user not found")
-		//		c.JSON(http.StatusNotFound, errRes)
-		//		return
-		//	}
-		//	errRes := userError.NewErrorInternal(err, "something went wrong")
-		//	c.JSON(http.StatusNotFound, errRes)
-		//	return
-		//}
-
 		c.JSON(http.StatusCreated, gin.H{
 			"message":   fmt.Sprintf("Approval for updating user with user ID : %d pending for approval", userId),
 			"action_id": action.ID,
