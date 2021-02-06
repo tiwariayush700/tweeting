@@ -8,6 +8,7 @@ import (
 	"github.com/tiwariayush700/tweeting/config"
 	"github.com/tiwariayush700/tweeting/models"
 	repositoryImpl "github.com/tiwariayush700/tweeting/repository/impl"
+	"github.com/tiwariayush700/tweeting/services"
 	serviceImpl "github.com/tiwariayush700/tweeting/services/impl"
 	"gorm.io/gorm"
 )
@@ -37,16 +38,24 @@ func (app *app) Start() {
 
 	//repositories
 	userRepositoryImpl := repositoryImpl.NewUserRepositoryImpl(app.DB)
+	actionRepostiroyImpl := repositoryImpl.NewActionRepositoryImpl(app.DB)
 
 	//services
 	userService := serviceImpl.NewUserServiceImpl(userRepositoryImpl)
+	actionService := serviceImpl.NewActionServiceImpl(actionRepostiroyImpl)
 	authService := authImpl.NewAuthService(app.Config.AuthSecret)
+	userApprovalService := serviceImpl.NewUserApprovalServiceImpl(userRepositoryImpl, actionRepostiroyImpl)
+	approvalServiceProviders := make(map[string]services.ApprovalService)
+	approvalServiceProviders["user"] = userApprovalService
+	approvalService := serviceImpl.NewApprovalServiceImpl(approvalServiceProviders)
 
 	//controllers
-	userController := NewUserController(userService, authService, app)
+	userController := NewUserController(userService, actionService, authService, app)
+	actionController := NewActionController(actionService, userService, approvalService, authService, app)
 
 	//register routes
 	userController.RegisterRoutes()
+	actionController.RegisterRoutes()
 
 	app.Router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

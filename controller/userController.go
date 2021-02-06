@@ -1,23 +1,28 @@
 package controller
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/tiwariayush700/tweeting/auth"
+	"github.com/tiwariayush700/tweeting/constants"
 	userError "github.com/tiwariayush700/tweeting/error"
 	"github.com/tiwariayush700/tweeting/models"
 	"github.com/tiwariayush700/tweeting/services"
+	"gorm.io/datatypes"
 	"net/http"
 	"strconv"
 )
 
 type userController struct {
-	service     services.UserService
-	app         *app
-	authService auth.Service
+	service       services.UserService
+	actionService services.ActionService
+	app           *app
+	authService   auth.Service
 }
 
-func NewUserController(service services.UserService, authService auth.Service, app *app) *userController {
-	return &userController{service: service, authService: authService, app: app}
+func NewUserController(service services.UserService, actionService services.ActionService, authService auth.Service, app *app) *userController {
+	return &userController{service: service, actionService: actionService, authService: authService, app: app}
 }
 
 func (u *userController) RegisterRoutes() {
@@ -178,20 +183,39 @@ func (u *userController) UpdateUserRole() gin.HandlerFunc {
 			return
 		}
 
-		err = u.service.UpdateUserRole(c, uint(userId), params.Role)
+		user := models.User{
+			Role: params.Role,
+		}
+		user.ID = uint(userId)
+		userBytes, _ := json.Marshal(&user)
+		action := &models.Action{
+			Message: fmt.Sprintf("Approval for updating user with user ID : %d pending for approval", userId),
+			Status:  constants.ActionStatusPending,
+			Body:    datatypes.JSON(userBytes),
+		}
+
+		err = u.actionService.CreateAction(c, action)
 		if err != nil {
-			if err == userError.ErrorNotFound {
-				errRes := userError.NewErrorNotFound(err, "user not found")
-				c.JSON(http.StatusNotFound, errRes)
-				return
-			}
-			errRes := userError.NewErrorInternal(err, "something went wrong")
-			c.JSON(http.StatusNotFound, errRes)
+			c.JSON(http.StatusNotFound, userError.NewErrorInternal(err, "something went wrong"))
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"message": "User update successful",
+		//err = u.service.UpdateUserRole(c, uint(userId), params.Role)
+		//if err != nil {
+		//	if err == userError.ErrorNotFound {
+		//		errRes := userError.NewErrorNotFound(err, "user not found")
+		//		c.JSON(http.StatusNotFound, errRes)
+		//		return
+		//	}
+		//	errRes := userError.NewErrorInternal(err, "something went wrong")
+		//	c.JSON(http.StatusNotFound, errRes)
+		//	return
+		//}
+
+		c.JSON(http.StatusCreated, gin.H{
+			"message":   fmt.Sprintf("Approval for updating user with user ID : %d pending for approval", userId),
+			"action_id": action.ID,
+			"status":    action.Status,
 		})
 
 	}

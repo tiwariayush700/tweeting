@@ -13,3 +13,8 @@ type Action struct {
 }
 
 type ActionStatus string
+
+type ActionRequest struct {
+	Provider string `json:"provider" binding:"required,oneof=user tweet"`
+	ActionID uint   `json:"action_id"`
+}

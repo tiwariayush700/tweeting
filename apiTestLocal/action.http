@@ -1,0 +1,16 @@
+##################SUPER ADMIN APIS#################
+#############GET ACTION LOGS############
+GET {{host}}/super-admin/actions
+Content-Type: application/json
+Authorization: {{superAdminToken}}
+
+
+#################APPROVE ACTION BY ACTION ID###############
+PUT {{host}}/super-admin/actions/approve
+Content-Type: application/json
+Authorization: {{superAdminToken}}
+
+{
+  "provider": "user",
+  "action_id": 2
+}

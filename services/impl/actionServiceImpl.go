@@ -13,6 +13,10 @@ type actionServiceImpl struct {
 	repository repository.ActionRepository
 }
 
+func (a *actionServiceImpl) FetchActions(ctx context.Context) ([]models.Action, error) {
+	return a.repository.FetchActions(ctx)
+}
+
 func (a *actionServiceImpl) CreateAction(ctx context.Context, action *models.Action) error {
 	return a.repository.Create(ctx, action)
 }

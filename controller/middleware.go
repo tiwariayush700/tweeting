@@ -54,7 +54,28 @@ func VerifyAdminAndServe(authSvc auth.Service) gin.HandlerFunc {
 			return
 		}
 
-		if role != string(models.UserRoleAdmin) {
+		if role != string(models.UserRoleAdmin) && role != string(models.UserRoleSuperAdmin) {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"message": "You are not authorised to use this service",
+			})
+			return
+		}
+
+		c.Next()
+
+	}
+}
+
+func VerifySuperAdminAndServe() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		_, role, err := getUserIdAndRoleFromContext(c)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, err)
+			return
+		}
+
+		if role != string(models.UserRoleSuperAdmin) {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"message": "You are not authorised to use this service",
 			})

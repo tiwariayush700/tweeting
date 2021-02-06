@@ -8,4 +8,5 @@ import (
 type ActionService interface {
 	CreateAction(ctx context.Context, action *models.Action) error
 	GetActionByID(ctx context.Context, actionID uint) (*models.Action, error)
+	FetchActions(ctx context.Context) ([]models.Action, error)
 }

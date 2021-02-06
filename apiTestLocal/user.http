@@ -24,6 +24,19 @@ Content-Type: application/json
   "password": "Password@123"
 }
 
+######REGISTER SUPER ADMIN USER#########
+POST {{host}}/user/register
+Content-Type: application/json
+
+{
+  "firstName": "Ayush",
+  "lastName": "Tiwari",
+  "phone": "0987654321",
+  "role": "SUPER_ADMIN",
+  "email": "superadmin@gmail.com",
+  "password": "Password@123"
+}
+
 
 ###############LOGIN USER
 POST {{host}}/user/login
@@ -38,13 +51,13 @@ Content-Type: application/json
 ################ME GET USER PROFILE###################
 GET {{host}}/user/me
 Content-Type: application/json
-Authorization: {{token}}
+Authorization: {{adminToken}}
 
 
 ##################ADMIN APIS UPDATE ROLE#################
 PUT {{host}}/admin/user/role/14
 Content-Type: application/json
-Authorization: {{token}}
+Authorization: {{adminToken}}
 
 {
   "role": "ADMIN"

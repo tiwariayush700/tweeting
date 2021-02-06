@@ -13,7 +13,35 @@ import (
 )
 
 type userServiceImpl struct {
-	repository repository.UserRepository
+	repository       repository.UserRepository
+	actionRepository repository.ActionRepository
+}
+
+func (u *userServiceImpl) Update(ctx context.Context, actionID uint, actionStatus models.ActionStatus) error {
+
+	action := &models.Action{}
+	err := u.actionRepository.Get(ctx, action, actionID)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return userError.ErrorNotFound
+		}
+		return err
+	}
+
+	user := &models.User{}
+	err = json.Unmarshal(action.Body, user)
+	if err != nil {
+		logrus.Errorf("err unmarshalling action body err : %v", err)
+		return err
+	}
+
+	err = u.UpdateUserRole(ctx, user.ID, user.Role)
+	if err != nil {
+		logrus.Errorf("err updating user role err : %v", err)
+		return err
+	}
+
+	return u.actionRepository.UpdateActionStatus(ctx, actionID, actionStatus)
 }
 
 func (u *userServiceImpl) CreateUser(ctx context.Context, user *models.User) error {
@@ -85,4 +113,8 @@ func mapUserResponse(user *models.User) (*models.UserResponse, error) {
 	}
 
 	return userResponse, nil
+}
+
+func NewUserApprovalServiceImpl(repository repository.UserRepository, actionRepository repository.ActionRepository) services.ApprovalService {
+	return &userServiceImpl{repository: repository, actionRepository: actionRepository}
 }
